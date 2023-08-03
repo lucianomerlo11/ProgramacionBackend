@@ -10,7 +10,6 @@ app.listen(app.get('port'))
 // Testing de Entregable
 
 // Se creará una instancia de la clase “ProductManager”
-fs.writeFileSync("./ejemplo.txt", '')
 const PM = new ProductManager("../ejemplo.txt",[]);
 
 // Get products

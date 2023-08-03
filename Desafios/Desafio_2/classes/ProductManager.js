@@ -29,6 +29,8 @@ class ProductManager {
 
     const p = new Product(title, description, price, thumbnail, code, stock);
 
+    p.setLastID();
+
     const { size } = fs.statSync(this.path);
 
     if (size !== 0) {
