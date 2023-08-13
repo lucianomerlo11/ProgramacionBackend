@@ -51,7 +51,7 @@ CART_ROUTER.post('/:cid/product/:pid', async(req, res) => {
         else throw resp;
         
     } catch (error) {
-        switch (e) {
+        switch (error) {
             case '400':
                 res.status(400).send('Bad request: no ingreso cid o pid')
                 break;
@@ -59,7 +59,7 @@ CART_ROUTER.post('/:cid/product/:pid', async(req, res) => {
                 res.status(404).send(`Not data found: no existe el cart ${cid}`)
                 break;
             default:
-                res.status(500).send("Ocurrio un error inesperado")
+                res.status(500).send(error)
                 break;
         }
     }

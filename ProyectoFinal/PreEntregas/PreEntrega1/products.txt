@@ -8,5 +8,15 @@
     "stock": 100,
     "status": true,
     "category": "Alimentos"
+  },
+  {
+    "id": 3,
+    "title": "Producto 2",
+    "description": "Prodcuto de prueba",
+    "price": 2000,
+    "code": "ABC123",
+    "stock": 100,
+    "status": true,
+    "category": "Alimentos"
   }
 ]
