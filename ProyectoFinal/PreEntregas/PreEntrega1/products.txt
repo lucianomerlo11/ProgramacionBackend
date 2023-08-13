@@ -1,0 +1,12 @@
+[
+  {
+    "id": 2,
+    "title": "Producto 2",
+    "description": "Producto",
+    "price": 2000,
+    "code": "ABD123",
+    "stock": 100,
+    "status": true,
+    "category": "Alimentos"
+  }
+]
