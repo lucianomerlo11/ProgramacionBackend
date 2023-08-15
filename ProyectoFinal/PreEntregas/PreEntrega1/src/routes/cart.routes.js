@@ -14,12 +14,24 @@ CART_ROUTER.get('/:cid', async(req, res) => {
 
         const resp = await C.getCartByID(cid);
 
-        if(!resp) throw '500';
+        if(!resp) throw 500;
+
+        if(resp == 400 || resp == 404 || resp == 500) throw resp;
 
         res.status(200).send(resp);
         
     } catch (error) {
-        res.status(500).send("Error al obtener cart");
+        switch (error) {
+            case 400:
+                res.status(400).send("Bad request: no ingreso id de carrito");                
+                break;
+            case 404:
+                res.status(404).send("Not data found: no existe el carrito");
+                break;
+            default:
+                res.status(500).send("Ocurrio un error inesperado");
+                break;
+        }
     }
 })
 

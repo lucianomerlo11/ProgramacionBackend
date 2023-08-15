@@ -50,14 +50,20 @@ class Cart{
 
     getCartByID = async(cid) => {
         try {
-            if(!cid) throw "No existe id de carrito";
+            if(!cid) throw "400";
 
-            const CART = await this.getCarts().find((c) => c.id == cid);
+            const CARTS = await this.getCarts()
+
+            if(!CARTS || CARTS.length == 0) throw "404";
+            
+            const CART = CARTS.find((c) => c.id == cid);
+
+            if(!CART) throw "404"
 
             return CART;
 
         } catch (error) {
-            return error;
+            return error == 400 ? 400 : error == 404 ? 404 : 500;
         }
     }
 }
