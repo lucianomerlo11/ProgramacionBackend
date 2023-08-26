@@ -3,25 +3,25 @@
     <hr>
     <ul id="product-list">
         {{#each products}}
-            <li>ID: {{this.id}} - Nombre: {{this.title}} <button>DELETE</button> </li>
+            <li>Nombre: {{this.title}} <button class="delete-button" data-id="{{this.id}}">DELETE</button> </li>
         {{/each}}    
     </ul>
     <br>
 
     <h1>Crear Nuevo Producto</h1>
-    <form id="idForm">
+    <form id="id-form">
         <label for="title">Title</label>
-        <input type="text" required name="title">
+        <input type="text" required name="title"><br>
         <label for="description">Description</label>
-        <input type="text" required name="description">
+        <input type="text" required name="description"><br>
         <label for="category">Category</label>
-        <input type="text" required name="category">
+        <input type="text" required name="category"><br>
         <label for="price">Price</label>
-        <input type="number" required name="price">
+        <input type="number" required name="price"><br>
         <label for="stock">Stock</label>
-        <input type="number" required name="stock">
+        <input type="number" required name="stock"><br>
         <label for="code">Code</label>
-        <input type="text" required name="code">
+        <input type="text" required name="code"><br>
         <button type="submit">Enviar</button>
     </form><br><br>
     
