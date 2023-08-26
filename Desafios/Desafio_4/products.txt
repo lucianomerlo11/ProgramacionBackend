@@ -1,0 +1,22 @@
+[
+  {
+    "id": 2,
+    "title": "Producto 1",
+    "description": "Producto",
+    "price": 2000,
+    "code": "ABD123",
+    "stock": 100,
+    "status": true,
+    "category": "Alimentos"
+  },
+  {
+    "id": 3,
+    "title": "Producto 2",
+    "description": "Prodcuto de prueba",
+    "price": 2000,
+    "code": "ABC123",
+    "stock": 100,
+    "status": true,
+    "category": "Alimentos"
+  }
+]

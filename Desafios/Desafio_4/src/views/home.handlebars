@@ -1,0 +1,11 @@
+<div style="padding: 30px">
+    <h1>Lista de productos</h1>
+    <hr>
+    <ul id="product-list">
+        {{#each products}}
+            <li>
+              <b>ID:</b> {{this.id}} - <b>Nombre:</b> {{this.title}} 
+            </li>
+        {{/each}}
+    </ul>
+</div>
