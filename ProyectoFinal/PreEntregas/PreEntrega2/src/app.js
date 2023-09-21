@@ -6,7 +6,8 @@ const PORT = 8080;
 const app = express();
 
 try {
-    await mongoose.connect('mongodb+srv://admin:admin@cluster0.e3xoi1s.mongodb.net/?retryWrites=true&w=majority');
+    await mongoose.connect('mongodb+srv://admin:admin@cluster0.e3xoi1s.mongodb.net/?retryWrites=true&w=majority')
+
     console.log('Conexión exitosa a la base de datos');
   } catch (error) {
     console.error('Error de conexión:', error);
