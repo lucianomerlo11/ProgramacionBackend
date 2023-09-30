@@ -5,6 +5,12 @@ import { productModel } from "../models/Product.model.js";
 const productRouter = Router()
 
 productRouter.get('/', async (req, res) => {
+
+    const user = req.session.user
+    console.log(user.user.first_name)
+    
+    const mensaje = user.user.rol == 'admin' ? `Hola admin ${user.user.first_name}` : `Hola ${user.user.first_name}`
+
     const { limit = 10, page = 1, category, stock, sort } = req.query
 
     const query = {};
@@ -26,7 +32,7 @@ productRouter.get('/', async (req, res) => {
     try {
         const prods = await productModel.find().lean()
         // const prods = await productModel.paginate(query, {limit: options.limit, page: options.page, sort: options.sort})
-        res.status(200).render('products', {prods: prods});
+        res.status(200).render('products', {prods: prods, welcomeMessage: mensaje});
     } catch (error) {
         res.status(400).send({ respuesta: 'Error en consultar productos', mensaje: error })
     }

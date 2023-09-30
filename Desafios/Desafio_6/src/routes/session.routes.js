@@ -8,12 +8,13 @@ sessionRouter.post("/login", async (req, res) => {
 
     try {
         if (req.session.login) res.status(200).send({resultado: "Login ya existente"})
-        
+
         const user = await userModel.findOne({email: email})
 
         if (user) {
             if (user.password == password) {
                req.session.login = true
+               req.session.user = {user: user}
                 res.redirect('/api/products', 200, {'info': 'user'})
             }else{
                 res.status(401).send({resultado: 'Constraseña no valida', mensaje: password})
