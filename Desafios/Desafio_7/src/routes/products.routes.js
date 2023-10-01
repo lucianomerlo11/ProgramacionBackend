@@ -1,0 +1,94 @@
+import { Router } from "express";
+import { productModel } from "../models/Product.model.js";
+
+
+const productRouter = Router()
+
+productRouter.get('/', async (req, res) => {
+
+    const user = req.session.user
+    
+    const mensaje = user.user.rol == 'admin' ? `Hola admin ${user.user.first_name}` : `Hola ${user.user.first_name}`
+
+    const { limit = 10, page = 1, category, stock, sort } = req.query
+
+    const query = {};
+
+    if (category) {
+        query.category = category;
+    }
+
+    if (stock) {
+        query.stock = {$gte: parseInt(stock)}
+    }
+
+    const options = {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        sort: !sort ? null : { price: sort == 'asc' || sort == 'desc' ? sort : null}
+    }
+
+    try {
+        const prods = await productModel.find().lean()
+        // const prods = await productModel.paginate(query, {limit: options.limit, page: options.page, sort: options.sort})
+        res.status(200).render('products', {prods: prods, welcomeMessage: mensaje});
+    } catch (error) {
+        res.status(400).send({ respuesta: 'Error en consultar productos', mensaje: error })
+    }
+})
+
+productRouter.get('/:id', async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const prod = await productModel.findById(id)
+        if (prod)
+            res.status(200).send({ respuesta: 'OK', mensaje: prod })
+        else
+            res.status(404).send({ respuesta: 'Error en consultar Producto', mensaje: 'Not Found' })
+    } catch (error) {
+        res.status(400).send({ respuesta: 'Error en consulta producto', mensaje: error })
+    }
+})
+
+productRouter.post('/', async (req, res) => {
+    const { title, description, stock, code, price, category } = req.body
+    try {
+        const prod = await productModel.create({ title, description, stock, code, price, category })
+        res.status(200).send({ respuesta: 'OK', mensaje: prod })
+    } catch (error) {
+        res.status(400).send({ respuesta: 'Error en crear productos', mensaje: error })
+    }
+})
+
+productRouter.put('/:id', async (req, res) => {
+    const { id } = req.params
+    const { title, description, stock, status, code, price, category } = req.body
+
+    try {
+        const prod = await productModel.findByIdAndUpdate(id, { title, description, stock, status, code, price, category })
+        if (prod)
+            res.status(200).send({ respuesta: 'OK', mensaje: 'Producto actualizado' })
+        else
+            res.status(404).send({ respuesta: 'Error en actualizar Producto', mensaje: 'Not Found' })
+    } catch (error) {
+        res.status(400).send({ respuesta: 'Error en actualizar producto', mensaje: error })
+    }
+})
+
+productRouter.delete('/:id', async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const prod = await productModel.findByIdAndDelete(id)
+        if (prod)
+            res.status(200).send({ respuesta: 'OK', mensaje: 'Producto eliminado' })
+        else
+            res.status(404).send({ respuesta: 'Error en eliminar Producto', mensaje: 'Not Found' })
+    } catch (error) {
+        res.status(400).send({ respuesta: 'Error en eliminar producto', mensaje: error })
+    }
+})
+
+
+export default productRouter
