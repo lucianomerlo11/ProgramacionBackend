@@ -8,7 +8,7 @@ productRouter.get('/', async (req, res) => {
 
     const user = req.session.user
     
-    const mensaje = user.user.rol == 'admin' ? `Hola admin ${user.user.first_name}` : `Hola ${user.user.first_name}`
+    const mensaje = user.rol == 'admin' ? `Hola admin ${user.first_name}` : `Hola ${user.first_name}`
 
     const { limit = 10, page = 1, category, stock, sort } = req.query
 

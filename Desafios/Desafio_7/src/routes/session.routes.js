@@ -10,21 +10,18 @@ sessionRouter.post("/login", passport.authenticate('login'), async (req, res) =>
     const {email, password} = req.body
 
     try {
-        if (req.session.login) res.status(200).send({resultado: "Login ya existente"})
-
-        const user = await userModel.findOne({email: email})
-
-        if (user) {
-            if (user.password == password) {
-               req.session.login = true
-               req.session.user = {user: user}
-                res.redirect('/api/products', 200, {'info': 'user'})
-            }else{
-                res.status(401).send({resultado: 'Constraseña no valida', mensaje: password})
-            }
-        }else{
-            res.status(404).send({ resultado: 'Not Found', message: user })
+        if (!req.user) {
+            return res.status(401).send({ mensaje: "Usuario invalido" })
         }
+
+        req.session.user = {
+            first_name: req.user.first_name,
+            last_name: req.user.last_name,
+            age: req.user.age,
+            email: req.user.email
+        }
+
+        res.redirect('/api/products', 200, {payload: req.user})
     } catch (error) {
         res.status(400).send({ error: `Error en Login: ${error}` })
     }
