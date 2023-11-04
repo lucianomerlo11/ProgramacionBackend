@@ -1,39 +1,17 @@
 import { Router } from "express";
 import { productModel } from "../models/Product.model.js";
-
+import { passportError, authorization } from "../utils/messagesError.js";
 
 const productRouter = Router()
 
 productRouter.get('/', async (req, res) => {
-
-    const user = req.session.user
-    
-    const mensaje = user.rol == 'admin' ? `Hola admin ${user.first_name}` : `Hola ${user.first_name}`
-
-    const { limit = 10, page = 1, category, stock, sort } = req.query
-
-    const query = {};
-
-    if (category) {
-        query.category = category;
-    }
-
-    if (stock) {
-        query.stock = {$gte: parseInt(stock)}
-    }
-
-    const options = {
-        page: parseInt(page),
-        limit: parseInt(limit),
-        sort: !sort ? null : { price: sort == 'asc' || sort == 'desc' ? sort : null}
-    }
+    const { limit } = req.query
 
     try {
-        const prods = await productModel.find().lean()
-        // const prods = await productModel.paginate(query, {limit: options.limit, page: options.page, sort: options.sort})
-        res.status(200).render('products', {prods: prods, welcomeMessage: mensaje});
+        const prods = await productModel.find().limit(limit)
+        res.status(200).send({ respuesta: 'OK', payload: prods })
     } catch (error) {
-        res.status(400).send({ respuesta: 'Error en consultar productos', mensaje: error })
+        res.status(400).send({ respuesta: 'Error en consultar productos', payload: error })
     }
 })
 
@@ -51,7 +29,7 @@ productRouter.get('/:id', async (req, res) => {
     }
 })
 
-productRouter.post('/', async (req, res) => {
+productRouter.post('/', passportError('jwt'), authorization('Admin'), async (req, res) => {
     const { title, description, stock, code, price, category } = req.body
     try {
         const prod = await productModel.create({ title, description, stock, code, price, category })
@@ -61,7 +39,7 @@ productRouter.post('/', async (req, res) => {
     }
 })
 
-productRouter.put('/:id', async (req, res) => {
+productRouter.put('/:id', passportError('jwt'), authorization('Admin'), async (req, res) => {
     const { id } = req.params
     const { title, description, stock, status, code, price, category } = req.body
 
@@ -76,7 +54,7 @@ productRouter.put('/:id', async (req, res) => {
     }
 })
 
-productRouter.delete('/:id', async (req, res) => {
+productRouter.delete('/:id', passportError('jwt'), authorization('Admin'), async (req, res) => {
     const { id } = req.params
 
     try {

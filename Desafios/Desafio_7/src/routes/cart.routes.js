@@ -10,24 +10,26 @@ cartRouter.get('/:id', async (req, res) => {
     try {
         const cart = await cartModel.findById(id)
         if (cart)
-            res.status(200).send({ respuesta: 'OK', mensaje: cart })
+            res.status(200).send({ respuesta: 'OK', payload: cart })
         else
-            res.status(404).send({ respuesta: 'Error en consultar Carrito', mensaje: 'Not Found' })
+            res.status(404).send({ respuesta: 'Error en consultar Carrito', payload: 'Not Found' })
     } catch (error) {
-        res.status(400).send({ respuesta: 'Error en consulta carrito', mensaje: error })
+        res.status(400).send({ respuesta: 'Error en consulta carrito', payload: error })
     }
 })
 
+// This endpoint create a new cart
 cartRouter.post('/', async (req, res) => {
 
     try {
         const cart = await cartModel.create({})
-        res.status(200).send({ respuesta: 'OK', mensaje: cart })
+        res.status(200).send({ respuesta: 'OK', payload: cart })
     } catch (error) {
-        res.status(400).send({ respuesta: 'Error en crear Carrito', mensaje: error })
+        res.status(400).send({ respuesta: 'Error en crear Carrito', payload: error })
     }
 })
 
+// This endpoint add a product to the cart
 cartRouter.post('/:cid/products/:pid', async (req, res) => {
     const { cid, pid } = req.params
     const { quantity } = req.body
@@ -45,17 +47,17 @@ cartRouter.post('/:cid/products/:pid', async (req, res) => {
                     cart.products.push({ id_prod: pid, quantity: quantity }) //Si no existe, lo agrego al carrito
                 }
                 const respuesta = await cartModel.findByIdAndUpdate(cid, cart) //Actualizar el carrito
-                res.status(200).send({ respuesta: 'OK', mensaje: respuesta })
+                res.status(200).send({ respuesta: 'OK', payload: respuesta })
             } else {
-                res.status(404).send({ respuesta: 'Error en agregar producto Carrito', mensaje: 'Produt Not Found' })
+                res.status(404).send({ respuesta: 'Error en agregar producto Carrito', payload: 'Produt Not Found' })
             }
         } else {
-            res.status(404).send({ respuesta: 'Error en agregar producto Carrito', mensaje: 'Cart Not Found' })
+            res.status(404).send({ respuesta: 'Error en agregar producto Carrito', payload: 'Cart Not Found' })
         }
 
     } catch (error) {
         console.log(error)
-        res.status(400).send({ respuesta: 'Error en agregar producto Carrito', mensaje: error })
+        res.status(400).send({ respuesta: 'Error en agregar producto Carrito', payload: error })
     }
 })
 

@@ -34,7 +34,10 @@ const productSchema = new Schema({
         required: true,
         unique: true
     },
-    thumbnails: []
+    thumbnails: {
+        type: String,
+        required: false
+    },
 })
 
 productSchema.plugin(paginate)

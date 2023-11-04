@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { generateToken } from "../utils/jwt.js"
+import { passportError, authorization } from "../utils/messagesError.js"
 import { userModel } from "../models/User.model.js";
 import passport from "passport";
 
@@ -7,7 +9,6 @@ const sessionRouter = Router()
 
 
 sessionRouter.post("/login", passport.authenticate('login'), async (req, res) => {
-    const {email, password} = req.body
 
     try {
         if (!req.user) {
@@ -21,7 +22,12 @@ sessionRouter.post("/login", passport.authenticate('login'), async (req, res) =>
             email: req.user.email
         }
 
-        res.redirect('/api/products', 200, {payload: req.user})
+        const token = generateToken(req.user)
+        res.cookie('jwtCookie', token, {
+            maxAge: 43200000 
+        })
+
+        res.status(200).send({payload: req.user})
     } catch (error) {
         res.status(400).send({ error: `Error en Login: ${error}` })
     }
@@ -31,7 +37,8 @@ sessionRouter.post('/register', passport.authenticate('register'), async (req, r
     try {
         if(!req.user) return res.status(400).send({mensaje: "Usuario ya existente"})
 
-        res.redirect('/login', 200, {'info': 'user created'})
+        res.status(200).send({mensaje: "Usuario creado"})
+        //res.redirect('/login', 200, {'info': 'user created'})
     } catch (error) {
         res.status(500).send({ mensaje: `Error al registrar usuario ${error}` })
     }
@@ -50,9 +57,18 @@ sessionRouter.get('/logout', (req, res) => {
     if (req.session.login) {
         req.session.destroy()
     }
-    //res.status(200).send({ resultado: 'Usuario deslogueado' })
-    res.redirect('/login', 200, { resultado: 'Usuario deslogueado' })
+    res.clearCookie('jwtCookie')
+    res.status(200).send({ payload: 'Usuario deslogueado' })
 })
 
+//Verifica que el token enviado sea valido (misma contraseña de encriptacion)
+sessionRouter.get('/testJWT', passport.authenticate('jwt', { session: false }), (req, res) => {
+    console.log(req)
+    res.send(req.user)
+})
+
+sessionRouter.get('/current', passportError('jwt'), authorization('user'), (req, res) => {
+    res.send(req.user)
+})
 
 export default sessionRouter
