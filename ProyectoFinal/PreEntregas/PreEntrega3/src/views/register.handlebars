@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="row d-flex justify-content-center align-items-center vh-100">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title text-center">Sign Up</h1>
+                </div>
+                <div class="card-body">
+                    <form action="/api/register", method="post">
+                        <input type="text" name="first_name" placeholder="First name" id="first_name" class="form-control mt-3" required>
+                        <input type="text" name="last_name" placeholder="Last name" id="last_name" class="form-control mt-3" required>
+                        <input type="number" name="age" placeholder="Age" id="age" class="form-control mt-3" required>
+                        <input type="text" name="email" placeholder="Email" id="email" class="form-control mt-3" required>
+                        <input type="password" name="password" placeholder="Password" id="password" class="form-control mt-3" required>
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Sign Up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
